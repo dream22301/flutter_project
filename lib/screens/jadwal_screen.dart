@@ -51,7 +51,7 @@ class _JadwalScreenState extends State<JadwalScreen> {
       return;
     }
 
-    _classMajor = student.classMajor;
+    _classMajor = student.shortClassMajor;
 
     try {
       final grouped = await ScheduleController.getSchedulesByDay(
@@ -130,22 +130,25 @@ class _JadwalScreenState extends State<JadwalScreen> {
           child: const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 22),
         ),
         const SizedBox(width: 10),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('Jadwal Pelajaran', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: _primary, letterSpacing: -0.3)),
-          Text(dateLabel, style: const TextStyle(fontSize: 11, color: _textMuted, fontWeight: FontWeight.w500)),
-        ]),
-        const Spacer(),
-        // Class badge
+        // Expanded prevents this column from overflowing the row
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text('Jadwal Pelajaran', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: _primary, letterSpacing: -0.3)),
+            Text(dateLabel, style: const TextStyle(fontSize: 11, color: _textMuted, fontWeight: FontWeight.w500)),
+          ]),
+        ),
+        const SizedBox(width: 8),
+        // Class badge (short name now, e.g. "XI RPL 1")
         if (_classMajor.isNotEmpty)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: _primary.withOpacity(0.10),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               _classMajor,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _primary),
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: _primary),
             ),
           ),
         const SizedBox(width: 8),

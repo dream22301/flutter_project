@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Student Card ──────────────────────────────────────────────────────────
   Widget _buildStudentCard() {
     final name       = _student?.name       ?? '—';
-    final classMajor = _student?.classMajor ?? '—';
+    final classMajor = _student?.shortClassMajor ?? '—';
     final nis        = _student?.nis        ?? '—';
 
     return Container(

@@ -119,7 +119,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
   // ── Profile Hero Card ──────────────────────────────────────────────────────
   Widget _buildProfileCard() {
     final name       = _student?.name       ?? '—';
-    final classMajor = _student?.classMajor ?? '—';
+    final classMajor = _student?.shortClassMajor ?? '—';
     final nis        = _student?.nis        ?? '—';
 
     // Generate initials for avatar
@@ -209,7 +209,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   // ── Info Section ───────────────────────────────────────────────────────────
   Widget _buildInfoSection() {
-    final classMajor = _student?.classMajor ?? '—';
+    final classMajor = _student?.shortClassMajor ?? '—';
     final nis        = _student?.nis        ?? '—';
 
     return Padding(

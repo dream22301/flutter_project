@@ -53,6 +53,30 @@ class AuthController {
     return prefs.getString(_keyPassword);
   }
 
+  /// Fetches a fresh [Student] profile from the server and updates the
+  /// local session. Silently does nothing if there is no saved session.
+  /// Returns the refreshed [Student] on success, or `null` on any error.
+  static Future<Student?> refreshProfile() async {
+    final prefs    = await SharedPreferences.getInstance();
+    final nis      = prefs.getString(_keyNis);
+    final password = prefs.getString(_keyPassword);
+    if (nis == null || nis.isEmpty || password == null) return null;
+
+    try {
+      final fresh = await ApiService.getStudentProfile(
+        nis: nis,
+        password: password,
+      );
+      // Update stored name / class_major in case the admin changed them
+      await prefs.setString(_keyName,       fresh.name);
+      await prefs.setString(_keyClassMajor, fresh.classMajor);
+      return fresh;
+    } catch (_) {
+      // Non-fatal: return the cached session instead
+      return getSession();
+    }
+  }
+
   /// Clears the session (logout).
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
@@ -68,3 +92,4 @@ class AuthController {
     return student != null;
   }
 }
+

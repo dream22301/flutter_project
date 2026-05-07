@@ -31,8 +31,13 @@ class _ProfilScreenState extends State<ProfilScreen> {
   }
 
   Future<void> _loadStudent() async {
-    final s = await AuthController.getSession();
-    if (mounted) setState(() { _student = s; _loading = false; });
+    // 1. Load from SharedPreferences immediately (fast, no network wait)
+    final cached = await AuthController.getSession();
+    if (mounted) setState(() { _student = cached; _loading = false; });
+
+    // 2. Then quietly refresh from the server in the background
+    final fresh = await AuthController.refreshProfile();
+    if (mounted && fresh != null) setState(() => _student = fresh);
   }
 
   Future<void> _logout() async {

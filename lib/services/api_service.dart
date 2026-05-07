@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../models/announcement.dart';
+import '../models/next_subject.dart';
 import '../models/student.dart';
 import '../models/student_schedule.dart';
 
@@ -44,6 +45,34 @@ class ApiService {
     }
   }
 
+  // ── Student Profile ───────────────────────────────────────────────────────
+
+  /// GET /api/mobile/student/profile?nis=…&password=…
+  /// Returns a fresh [Student] from the server (used to refresh local session).
+  static Future<Student> getStudentProfile({
+    required String nis,
+    required String password,
+  }) async {
+    final uri = Uri.parse(ApiConfig.studentProfile).replace(
+      queryParameters: {'nis': nis, 'password': password},
+    );
+
+    final response = await http
+        .get(uri, headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+
+    if (response.statusCode == 200) {
+      return Student.fromJson(body['student'] as Map<String, dynamic>);
+    } else {
+      throw ApiException(
+        message: body['message'] as String? ?? 'Gagal memuat profil.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
+
   // ── Announcements ─────────────────────────────────────────────────────────
 
   /// GET /api/mobile/announcements
@@ -61,6 +90,26 @@ class ApiService {
     } else {
       throw ApiException(
         message: 'Gagal memuat pengumuman.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
+
+  /// GET /api/mobile/announcements/{id}
+  /// Returns a single [Announcement] or throws [ApiException] on 404.
+  static Future<Announcement> getAnnouncementDetail(int id) async {
+    final response = await http
+        .get(Uri.parse(ApiConfig.announcementDetail(id)), headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return Announcement.fromJson(body as Map<String, dynamic>);
+    } else {
+      throw ApiException(
+        message: (body as Map<String, dynamic>)['message'] as String? ??
+            'Pengumuman tidak ditemukan.',
         statusCode: response.statusCode,
       );
     }
@@ -101,6 +150,37 @@ class ApiService {
       );
     }
   }
+
+  // ── Next Subject ──────────────────────────────────────────────────────────
+
+  /// GET /api/mobile/next-subject?nis=…&password=…
+  /// Returns [NextSubject] if there is an upcoming class today, or `null`
+  /// when all classes are done / today is a non-school day.
+  static Future<NextSubject?> getNextSubject({
+    required String nis,
+    required String password,
+  }) async {
+    final uri = Uri.parse(ApiConfig.nextSubject).replace(
+      queryParameters: {'nis': nis, 'password': password},
+    );
+
+    final response = await http
+        .get(uri, headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+
+    if (response.statusCode == 200) {
+      final raw = body['next_subject'];
+      if (raw == null) return null;
+      return NextSubject.fromJson(raw as Map<String, dynamic>);
+    } else {
+      throw ApiException(
+        message: body['message'] as String? ?? 'Gagal memuat mata pelajaran.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
 }
 
 // ── API Exception ─────────────────────────────────────────────────────────────
@@ -114,3 +194,5 @@ class ApiException implements Exception {
   @override
   String toString() => 'ApiException($statusCode): $message';
 }
+
+

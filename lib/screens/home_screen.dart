@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../controllers/announcement_controller.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/next_subject_controller.dart';
 import '../controllers/schedule_controller.dart';
 import '../models/announcement.dart';
+import '../models/next_subject.dart';
 import '../models/student.dart';
 import '../models/student_schedule.dart';
 import '../screens/login_screen.dart';
@@ -28,10 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Student?              _student;
   List<Announcement>    _announcements    = [];
   List<StudentSchedule> _todaySchedules   = [];
+  NextSubject?          _nextSubject;
   bool   _loadingAnnouncements = true;
   bool   _loadingSchedule      = true;
+  bool   _loadingNextSubject   = true;
   String? _announcementError;
   String? _scheduleError;
+  String? _nextSubjectError;
 
   @override
   void initState() {
@@ -45,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
 
     // Load announcements and schedule in parallel
-    await Future.wait([_loadAnnouncements(), _loadTodaySchedule()]);
+    await Future.wait([_loadAnnouncements(), _loadTodaySchedule(), _loadNextSubject()]);
   }
 
   Future<void> _loadAnnouncements() async {
@@ -83,6 +88,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _loadNextSubject() async {
+    final nis      = _student?.nis ?? '';
+    final password = await AuthController.getSavedPassword();
+    if (nis.isEmpty || password == null) {
+      if (mounted) setState(() => _loadingNextSubject = false);
+      return;
+    }
+    try {
+      final ns = await NextSubjectController.getNextSubject(
+        nis: nis, password: password,
+      );
+      if (mounted) setState(() { _nextSubject = ns; _loadingNextSubject = false; });
+    } on ApiException catch (e) {
+      if (mounted) setState(() { _nextSubjectError = e.message; _loadingNextSubject = false; });
+    } catch (_) {
+      if (mounted) setState(() { _nextSubjectError = 'Gagal memuat mata pelajaran.'; _loadingNextSubject = false; });
+    }
+  }
+
   String _todayDayName() {
     const names = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu', 'Minggu'];
     return names[DateTime.now().weekday - 1];
@@ -92,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await AuthController.logout();
     AnnouncementController.clearCache();
     ScheduleController.clearCache();
+    NextSubjectController.clearCache();
     if (!mounted) return;
     Navigator.pushReplacement(
       context,
@@ -113,11 +138,14 @@ class _HomeScreenState extends State<HomeScreen> {
           onRefresh: () async {
             AnnouncementController.clearCache();
             ScheduleController.clearCache();
+            NextSubjectController.clearCache();
             setState(() {
               _loadingAnnouncements = true;
               _loadingSchedule      = true;
+              _loadingNextSubject   = true;
               _announcementError    = null;
               _scheduleError        = null;
+              _nextSubjectError     = null;
             });
             await _loadData();
           },
@@ -132,6 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
                 child: _buildStudentCard(),
+              )),
+              SliverToBoxAdapter(child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: _buildNextSubjectSection(),
               )),
               SliverToBoxAdapter(child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
@@ -256,6 +288,45 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  // ── Next Subject Section ──────────────────────────────────────────────────
+  Widget _buildNextSubjectSection() {
+    if (_loadingNextSubject) {
+      return Container(
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10)],
+        ),
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_nextSubjectError != null) {
+      return const SizedBox.shrink(); // silent fail — don't block the home screen
+    }
+    if (_nextSubject == null) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10)],
+        ),
+        child: Row(children: [
+          const Icon(Icons.event_available_rounded, color: Color(0xFF22C55E), size: 22),
+          const SizedBox(width: 10),
+          const Expanded(
+            child: Text(
+              'Tidak ada lagi kelas hari ini 🎉',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF555555)),
+            ),
+          ),
+        ]),
+      );
+    }
+    return _NextSubjectCard(ns: _nextSubject!);
   }
 
   // ── Announcements Section ─────────────────────────────────────────────────
@@ -600,6 +671,66 @@ class _EmptyState extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
       child: Center(child: Text(message, style: const TextStyle(fontSize: 13, color: Color(0xFF888888)))),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NEXT SUBJECT CARD
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _NextSubjectCard extends StatelessWidget {
+  final NextSubject ns;
+  const _NextSubjectCard({required this.ns});
+
+  static const _primary = Color(0xFF4C4DDC);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF5B5EE8), _primary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [BoxShadow(color: _primary.withOpacity(0.28), blurRadius: 14, offset: const Offset(0, 5))],
+      ),
+      child: Row(children: [
+        Container(
+          width: 46, height: 46,
+          decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+          child: const Icon(Icons.next_plan_rounded, color: Colors.white, size: 24),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text(
+              'MATA PELAJARAN SELANJUTNYA',
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white70, letterSpacing: 0.8),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              ns.subject,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.white),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Row(children: [
+              const Icon(Icons.room_outlined, size: 12, color: Colors.white70),
+              const SizedBox(width: 3),
+              Text(ns.room, style: const TextStyle(fontSize: 12, color: Colors.white70)),
+              const SizedBox(width: 10),
+              const Icon(Icons.access_time_rounded, size: 12, color: Colors.white70),
+              const SizedBox(width: 3),
+              Text(ns.timeRange, style: const TextStyle(fontSize: 12, color: Colors.white70)),
+            ]),
+          ]),
+        ),
+      ]),
     );
   }
 }

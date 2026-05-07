@@ -75,10 +75,14 @@ class _JadwalScreenState extends State<JadwalScreen> {
   bool _isOngoing(StudentSchedule s) {
     final now = DateTime.now();
     if (_selectedDay != now.weekday - 1) return false;
-    final parts1   = s.periodStart.split(':');
-    final parts2   = s.periodEnd.split(':');
-    final startMin = int.parse(parts1[0]) * 60 + int.parse(parts1[1]);
-    final endMin   = int.parse(parts2[0]) * 60 + int.parse(parts2[1]);
+    final st = s.startTime;
+    final et = s.endTime;
+    if (st == null || et == null) return false;
+    final sp = st.split(':');
+    final ep = et.split(':');
+    if (sp.length < 2 || ep.length < 2) return false;
+    final startMin = int.parse(sp[0]) * 60 + int.parse(sp[1]);
+    final endMin   = int.parse(ep[0]) * 60 + int.parse(ep[1]);
     final nowMin   = now.hour * 60 + now.minute;
     return nowMin >= startMin && nowMin < endMin;
   }
@@ -86,8 +90,11 @@ class _JadwalScreenState extends State<JadwalScreen> {
   bool _isPast(StudentSchedule s) {
     final now = DateTime.now();
     if (_selectedDay != now.weekday - 1) return false;
-    final parts  = s.periodEnd.split(':');
-    final endMin = int.parse(parts[0]) * 60 + int.parse(parts[1]);
+    final et = s.endTime;
+    if (et == null) return false;
+    final ep = et.split(':');
+    if (ep.length < 2) return false;
+    final endMin = int.parse(ep[0]) * 60 + int.parse(ep[1]);
     return now.hour * 60 + now.minute >= endMin;
   }
 
@@ -347,11 +354,11 @@ class _EntryCard extends StatelessWidget {
             : [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Time
-        SizedBox(width: 58, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(entry.periodStart, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: ongoing ? _primary : _textDark)),
+        // Time — uses HH:MM when available, falls back to "Jam ke-N"
+        SizedBox(width: 70, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(entry.startDisplay, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: ongoing ? _primary : _textDark)),
           const SizedBox(height: 2),
-          Text(entry.periodEnd, style: TextStyle(fontSize: 12, color: past ? const Color(0xFFCCCCCC) : _textMuted)),
+          Text(entry.endDisplay, style: TextStyle(fontSize: 12, color: past ? const Color(0xFFCCCCCC) : _textMuted)),
         ])),
         // Divider
         Container(width: 1.5, height: 44, margin: const EdgeInsets.only(right: 12), color: ongoing ? _primary.withOpacity(0.30) : const Color(0xFFEEEEEE)),

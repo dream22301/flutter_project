@@ -12,8 +12,9 @@ class ApiConfig {
     if (kIsWeb) {
       return 'http://127.0.0.1:8000/api/mobile';
     } else if (Platform.isAndroid) {
-      // 10.0.2.2 maps to host machine's localhost from inside the Android Emulator
-      // If testing on a physical device, replace this with your LAN IP (e.g. 192.168.1.X)
+      // 10.0.2.2 maps to host machine's localhost inside the Android Emulator.
+      // ⚠ Testing on a PHYSICAL device? Replace with your LAN IP, e.g.:
+      //   return 'http://192.168.1.X:8000/api/mobile';
       return 'http://10.0.2.2:8000/api/mobile';
     } else {
       // Linux, Windows, macOS Desktop
@@ -27,7 +28,11 @@ class ApiConfig {
   static String get announcements    => '$baseUrl/announcements';
   static String get studentSchedule  => '$baseUrl/student-schedule';
   static String get nextSubject      => '$baseUrl/next-subject';
+  static String get questions        => '$baseUrl/questions';
 
   /// Builds the URL for a single announcement detail.
   static String announcementDetail(int id) => '$baseUrl/announcements/$id';
+
+  /// Builds the URL for a single question set (with all questions).
+  static String questionDetail(int id) => '$baseUrl/questions/$id';
 }

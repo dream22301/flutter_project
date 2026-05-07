@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../config/api_config.dart';
 import '../models/announcement.dart';
 import '../models/next_subject.dart';
+import '../models/question_set.dart';
 import '../models/student.dart';
 import '../models/student_schedule.dart';
 
@@ -120,6 +121,8 @@ class ApiService {
   /// GET /api/mobile/student-schedule?nis=…&password=…
   /// Returns a map with keys: `student` ([Student]) and
   /// `schedules` (List<[StudentSchedule]>).
+  /// Each schedule now also carries `start_time`/`end_time` (HH:MM) from the
+  /// teacher's schedule cross-reference.
   static Future<Map<String, dynamic>> getStudentSchedule({
     required String nis,
     required String password,
@@ -181,6 +184,48 @@ class ApiService {
       );
     }
   }
+
+  // ── Questions ─────────────────────────────────────────────────────────────
+
+  /// GET /api/mobile/questions
+  /// Returns the list of all [QuestionSet] (without nested questions).
+  static Future<List<QuestionSet>> getQuestionSets() async {
+    final response = await http
+        .get(Uri.parse(ApiConfig.questions), headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
+      return data
+          .map((e) => QuestionSet.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } else {
+      throw ApiException(
+        message: 'Gagal memuat daftar soal.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
+
+  /// GET /api/mobile/questions/{id}
+  /// Returns a [QuestionSetDetail] with all nested questions.
+  static Future<QuestionSetDetail> getQuestionSetDetail(int id) async {
+    final response = await http
+        .get(Uri.parse(ApiConfig.questionDetail(id)), headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return QuestionSetDetail.fromJson(body as Map<String, dynamic>);
+    } else {
+      throw ApiException(
+        message: (body as Map<String, dynamic>)['message'] as String? ??
+            'Paket soal tidak ditemukan.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
 }
 
 // ── API Exception ─────────────────────────────────────────────────────────────
@@ -194,5 +239,3 @@ class ApiException implements Exception {
   @override
   String toString() => 'ApiException($statusCode): $message';
 }
-
-

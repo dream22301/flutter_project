@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/announcement_controller.dart';
 import '../controllers/auth_controller.dart';
+import '../controllers/question_controller.dart';
 import '../controllers/schedule_controller.dart';
 import '../models/student.dart';
 import '../screens/login_screen.dart';
@@ -71,6 +72,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
     await AuthController.logout();
     AnnouncementController.clearCache();
     ScheduleController.clearCache();
+    QuestionController.clearCache();
 
     if (!mounted) return;
     Navigator.pushReplacement(

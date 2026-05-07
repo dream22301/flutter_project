@@ -394,20 +394,26 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: _todaySchedules.take(3).map((s) {
         final now         = DateTime.now();
-        final startParts  = s.periodStart.split(':');
-        final endParts    = s.periodEnd.split(':');
-        final startMin    = int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
-        final endMin      = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
-        final nowMin      = now.hour * 60 + now.minute;
-        final isOngoing   = nowMin >= startMin && nowMin < endMin;
+        final isOngoing   = () {
+          final st = s.startTime;
+          final et = s.endTime;
+          if (st == null || et == null) return false;
+          final sp = st.split(':');
+          final ep = et.split(':');
+          if (sp.length < 2 || ep.length < 2) return false;
+          final startMin = int.parse(sp[0]) * 60 + int.parse(sp[1]);
+          final endMin   = int.parse(ep[0]) * 60 + int.parse(ep[1]);
+          final nowMin   = now.hour * 60 + now.minute;
+          return nowMin >= startMin && nowMin < endMin;
+        }();
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           child: _ScheduleCard(
-            timeStart: s.periodStart,
-            timeEnd:   s.periodEnd,
+            timeStart: s.startDisplay,
+            timeEnd:   s.endDisplay,
             subject:   s.subject,
-            detail:    '${s.room}',
+            detail:    s.room,
             isOngoing: isOngoing,
           ),
         );

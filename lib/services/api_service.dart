@@ -76,11 +76,15 @@ class ApiService {
 
   // ── Announcements ─────────────────────────────────────────────────────────
 
-  /// GET /api/mobile/announcements
-  /// Returns a list of [Announcement].
-  static Future<List<Announcement>> getAnnouncements() async {
+  /// GET /api/mobile/announcements?class_major=…
+  /// Returns a list of [Announcement] filtered by class.
+  static Future<List<Announcement>> getAnnouncements(String classMajor) async {
+    final uri = Uri.parse(ApiConfig.announcements).replace(
+      queryParameters: {'class_major': classMajor},
+    );
+
     final response = await http
-        .get(Uri.parse(ApiConfig.announcements), headers: _headers)
+        .get(uri, headers: _headers)
         .timeout(const Duration(seconds: 15));
 
     if (response.statusCode == 200) {

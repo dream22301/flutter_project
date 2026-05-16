@@ -7,10 +7,10 @@ class AnnouncementController {
   // Simple in-memory cache to avoid duplicate requests within the same session.
   static List<Announcement>? _cache;
 
-  /// Returns announcements, using the in-memory cache when available.
-  static Future<List<Announcement>> getAnnouncements({bool forceRefresh = false}) async {
+  /// Returns announcements filtered by class, using the in-memory cache when available.
+  static Future<List<Announcement>> getAnnouncements(String classMajor, {bool forceRefresh = false}) async {
     if (!forceRefresh && _cache != null) return _cache!;
-    _cache = await ApiService.getAnnouncements();
+    _cache = await ApiService.getAnnouncements(classMajor);
     return _cache!;
   }
 

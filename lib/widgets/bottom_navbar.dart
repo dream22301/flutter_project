@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 
 // ─── Import your screens here as you build them ───────────────────────────────
 import '../screens/home_screen.dart';
 import '../screens/jadwal_screen.dart';
 import '../screens/profil_screen.dart';
+import '../screens/question_screen.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
@@ -20,6 +22,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   final List<Widget> _pages = const [
     HomeScreen(),
     JadwalScreen(),
+    QuestionScreen(),
     ProfilScreen(),
   ];
 
@@ -31,7 +34,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F7),
+      backgroundColor: AppColors.primaryBg,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         switchInCurve: Curves.easeInOut,
@@ -63,6 +66,7 @@ class _BottomBar extends StatelessWidget {
   static const _items = [
     (icon: Icons.home_rounded,           label: 'HOME'),
     (icon: Icons.calendar_month_rounded, label: 'JADWAL'),
+    (icon: Icons.assignment_rounded,     label: 'SOAL'),
     (icon: Icons.person_rounded,         label: 'PROFIL'),
   ];
 
@@ -70,7 +74,7 @@ class _BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -115,8 +119,8 @@ class _NavItem extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _active   = Color(0xFF4444FF);
-  static const _inactive = Color(0xFFAAAAAA);
+  static const _active   = AppColors.primary;
+  static const _inactive = AppColors.textLight;
 
   @override
   Widget build(BuildContext context) {

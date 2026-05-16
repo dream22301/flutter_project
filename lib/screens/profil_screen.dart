@@ -5,6 +5,8 @@ import '../controllers/question_controller.dart';
 import '../controllers/schedule_controller.dart';
 import '../models/student.dart';
 import '../screens/login_screen.dart';
+import '../widgets/shared/app_header.dart';
+import '../widgets/shared/page_layout.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PROFIL SCREEN
@@ -19,7 +21,6 @@ class ProfilScreen extends StatefulWidget {
 
 class _ProfilScreenState extends State<ProfilScreen> {
   static const _primary  = Color(0xFF4C4DDC);
-  static const _bg       = Color(0xFFF2F3F8);
   static const _textDark = Color(0xFF1A1A2E);
 
   Student? _student;
@@ -83,43 +84,19 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bg,
-      body: SafeArea(
-        child: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(child: _buildHeader()),
-                  SliverToBoxAdapter(child: _buildProfileCard()),
-                  SliverToBoxAdapter(child: _buildInfoSection()),
-                  SliverToBoxAdapter(child: _buildMenuSection()),
-                  SliverToBoxAdapter(child: _buildLogoutButton()),
-                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
-                ],
-              ),
-      ),
-    );
-  }
-
-  // ── Header ─────────────────────────────────────────────────────────────────
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
-      child: Row(
-        children: [
-          Container(
-            width: 38, height: 38,
-            decoration: BoxDecoration(color: _primary, borderRadius: BorderRadius.circular(10)),
-            child: const Icon(Icons.person_rounded, color: Colors.white, size: 22),
-          ),
-          const SizedBox(width: 10),
-          const Text(
-            'Profil Siswa',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: _primary, letterSpacing: -0.3),
-          ),
-        ],
-      ),
+    return PageLayout(
+      header: AppHeader(icon: Icons.person_rounded, title: 'Profil Siswa'),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child: _buildProfileCard()),
+                SliverToBoxAdapter(child: _buildInfoSection()),
+                SliverToBoxAdapter(child: _buildMenuSection()),
+                SliverToBoxAdapter(child: _buildLogoutButton()),
+                const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              ],
+            ),
     );
   }
 

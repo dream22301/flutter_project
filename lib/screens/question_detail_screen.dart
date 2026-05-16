@@ -29,7 +29,11 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
   }
 
   void _showResult(List<Question> questions) {
-    final correct = questions.where((q) => _selectedAnswers[q.id] == q.correctAnswer).length;
+    final correct = questions.where((q) {
+      final studentAnswer = _selectedAnswers[q.id]?.toUpperCase() ?? '';
+      final actualAnswer = q.correctAnswer.toUpperCase();
+      return studentAnswer == actualAnswer;
+    }).length;
     final score   = questions.isEmpty ? 0.0 : (correct / questions.length) * 100;
     showDialog(
       context: context,

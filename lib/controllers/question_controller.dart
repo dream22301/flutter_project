@@ -39,4 +39,11 @@ class QuestionController {
     _listCache = null;
     _detailCache.clear();
   }
+  /// GET /api/mobile/questions/key/{key_code}
+  /// Finds a question set by its key code.
+  static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode) async {
+    final detail = await ApiService.getQuestionSetByKey(keyCode);
+    _detailCache[detail.id] = detail;
+    return detail;
+  }
 }

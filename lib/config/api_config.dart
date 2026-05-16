@@ -35,4 +35,7 @@ class ApiConfig {
 
   /// Builds the URL for a single question set (with all questions).
   static String questionDetail(int id) => '$baseUrl/questions/$id';
+
+  /// Builds the URL for finding a question set by its key_code.
+  static String questionByKey(String keyCode) => '$baseUrl/questions/key/$keyCode';
 }

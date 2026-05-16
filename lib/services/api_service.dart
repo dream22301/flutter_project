@@ -226,6 +226,25 @@ class ApiService {
       );
     }
   }
+  /// GET /api/mobile/questions/key/{key_code}
+  /// Returns a [QuestionSetDetail] with all nested questions by its key code.
+  static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode) async {
+    final response = await http
+        .get(Uri.parse(ApiConfig.questionByKey(keyCode)), headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return QuestionSetDetail.fromJson(body as Map<String, dynamic>);
+    } else {
+      throw ApiException(
+        message: (body as Map<String, dynamic>)['message'] as String? ??
+            'Paket soal tidak ditemukan.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
 }
 
 // ── API Exception ─────────────────────────────────────────────────────────────

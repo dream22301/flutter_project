@@ -249,6 +249,36 @@ class ApiService {
       );
     }
   }
+
+  /// POST /api/mobile/questions/{id}/score
+  /// Submits the student's score for the given question set.
+  static Future<void> submitScore({
+    required int questionSetId,
+    required String nis,
+    required String password,
+    required double score,
+  }) async {
+    final response = await http
+        .post(
+          Uri.parse(ApiConfig.submitScore(questionSetId)),
+          headers: _headers,
+          body: jsonEncode({
+            'nis': nis,
+            'password': password,
+            'score': score,
+          }),
+        )
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      final body = jsonDecode(response.body);
+      throw ApiException(
+        message: (body as Map<String, dynamic>)['message'] as String? ??
+            'Gagal menyimpan skor.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
 }
 
 // ── API Exception ─────────────────────────────────────────────────────────────

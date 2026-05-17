@@ -46,4 +46,20 @@ class QuestionController {
     _detailCache[detail.id] = detail;
     return detail;
   }
+
+  /// POST /api/mobile/questions/{id}/score
+  /// Submits the student's score for the given question set.
+  static Future<void> submitScore({
+    required int questionSetId,
+    required String nis,
+    required String password,
+    required double score,
+  }) async {
+    return ApiService.submitScore(
+      questionSetId: questionSetId,
+      nis: nis,
+      password: password,
+      score: score,
+    );
+  }
 }

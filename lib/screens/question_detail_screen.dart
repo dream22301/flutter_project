@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/question_controller.dart';
 import '../models/question_set.dart';
 import '../widgets/shared/app_header.dart';
@@ -28,13 +29,43 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
     setState(() => _selectedAnswers[questionId] = letter);
   }
 
-  void _showResult(List<Question> questions) {
+  Future<void> _showResult(List<Question> questions) async {
     final correct = questions.where((q) {
       final studentAnswer = _selectedAnswers[q.id]?.toUpperCase() ?? '';
       final actualAnswer = q.correctAnswer.toUpperCase();
       return studentAnswer == actualAnswer;
     }).length;
-    final score   = questions.isEmpty ? 0.0 : (correct / questions.length) * 100;
+    final score = questions.isEmpty ? 0.0 : (correct / questions.length) * 100;
+
+    // Show a loading indicator while submitting
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+    );
+
+    try {
+      final student = await AuthController.getSession();
+      if (student != null) {
+        // Retrieve the plain text password.
+        // AuthController stores the raw password during login so we can re-use it for API requests.
+        final password = await AuthController.getSavedPassword() ?? '';
+
+        await QuestionController.submitScore(
+          questionSetId: widget.questionSetId,
+          nis: student.nis,
+          password: password,
+          score: score,
+        );
+      }
+    } catch (e) {
+      // Just print error, or handle it
+      debugPrint('Failed to submit score: $e');
+    }
+
+    if (!mounted) return;
+    Navigator.pop(context); // Close loading dialog
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(

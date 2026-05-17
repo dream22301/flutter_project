@@ -38,4 +38,7 @@ class ApiConfig {
 
   /// Builds the URL for finding a question set by its key_code.
   static String questionByKey(String keyCode) => '$baseUrl/questions/key/$keyCode';
+
+  /// Builds the URL for submitting a score for a question set.
+  static String submitScore(int id) => '$baseUrl/questions/$id/score';
 }

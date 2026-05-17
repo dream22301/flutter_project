@@ -190,20 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (_nextSubjectError != null) return const SizedBox.shrink();
     if (_nextSubject == null) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10)],
-        ),
-        child: const Row(children: [
-          Icon(Icons.event_available_rounded, color: AppColors.success, size: 22),
-          SizedBox(width: 10),
-          Expanded(child: Text('Tidak ada lagi kelas hari ini 🎉',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF555555)))),
-        ]),
-      );
+      return const SizedBox.shrink();
     }
     return NextSubjectCard(ns: _nextSubject!);
   }

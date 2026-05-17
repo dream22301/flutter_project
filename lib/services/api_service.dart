@@ -76,11 +76,15 @@ class ApiService {
 
   // ── Announcements ─────────────────────────────────────────────────────────
 
-  /// GET /api/mobile/announcements
-  /// Returns a list of [Announcement].
-  static Future<List<Announcement>> getAnnouncements() async {
+  /// GET /api/mobile/announcements?class_major=…
+  /// Returns a list of [Announcement] filtered by class.
+  static Future<List<Announcement>> getAnnouncements(String classMajor) async {
+    final uri = Uri.parse(ApiConfig.announcements).replace(
+      queryParameters: {'class_major': classMajor},
+    );
+
     final response = await http
-        .get(Uri.parse(ApiConfig.announcements), headers: _headers)
+        .get(uri, headers: _headers)
         .timeout(const Duration(seconds: 15));
 
     if (response.statusCode == 200) {
@@ -222,6 +226,55 @@ class ApiService {
       throw ApiException(
         message: (body as Map<String, dynamic>)['message'] as String? ??
             'Paket soal tidak ditemukan.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
+  /// GET /api/mobile/questions/key/{key_code}
+  /// Returns a [QuestionSetDetail] with all nested questions by its key code.
+  static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode, String nis, String password) async {
+    final response = await http
+        .get(Uri.parse(ApiConfig.questionByKey(keyCode, nis, password)), headers: _headers)
+        .timeout(const Duration(seconds: 15));
+
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return QuestionSetDetail.fromJson(body as Map<String, dynamic>);
+    } else {
+      throw ApiException(
+        message: (body as Map<String, dynamic>)['message'] as String? ??
+            'Paket soal tidak ditemukan.',
+        statusCode: response.statusCode,
+      );
+    }
+  }
+
+  /// POST /api/mobile/questions/{id}/score
+  /// Submits the student's score for the given question set.
+  static Future<void> submitScore({
+    required int questionSetId,
+    required String nis,
+    required String password,
+    required double score,
+  }) async {
+    final response = await http
+        .post(
+          Uri.parse(ApiConfig.submitScore(questionSetId)),
+          headers: _headers,
+          body: jsonEncode({
+            'nis': nis,
+            'password': password,
+            'score': score,
+          }),
+        )
+        .timeout(const Duration(seconds: 15));
+
+    if (response.statusCode != 200) {
+      final body = jsonDecode(response.body);
+      throw ApiException(
+        message: (body as Map<String, dynamic>)['message'] as String? ??
+            'Gagal menyimpan skor.',
         statusCode: response.statusCode,
       );
     }

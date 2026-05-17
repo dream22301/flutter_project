@@ -57,7 +57,7 @@ class _JadwalScreenState extends State<JadwalScreen> {
   bool _isOngoing(StudentSchedule s) {
     final now = DateTime.now();
     if (_selectedDay != now.weekday - 1) return false;
-    final st = s.startTime; final et = s.endTime;
+    final st = s.calculatedStartTime; final et = s.calculatedEndTime;
     if (st == null || et == null) return false;
     final sp = st.split(':'); final ep = et.split(':');
     if (sp.length < 2 || ep.length < 2) return false;
@@ -70,7 +70,7 @@ class _JadwalScreenState extends State<JadwalScreen> {
   bool _isPast(StudentSchedule s) {
     final now = DateTime.now();
     if (_selectedDay != now.weekday - 1) return false;
-    final et = s.endTime;
+    final et = s.calculatedEndTime;
     if (et == null) return false;
     final ep = et.split(':');
     if (ep.length < 2) return false;

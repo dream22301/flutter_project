@@ -10,6 +10,7 @@ import '../models/student.dart';
 import '../models/student_schedule.dart';
 import '../screens/login_screen.dart';
 import '../services/api_service.dart';
+import 'announcement_screen.dart';
 import '../widgets/home/announcement_card.dart';
 import '../widgets/home/next_subject_card.dart';
 import '../widgets/home/schedule_card.dart';
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _loadAnnouncements() async {
     try {
-      final data = await AnnouncementController.getAnnouncements();
+      final data = await AnnouncementController.getAnnouncements(_student?.classMajor ?? '');
       if (mounted) setState(() { _announcements = data; _loadingAnnouncements = false; });
     } on ApiException catch (e) {
       if (mounted) setState(() { _announcementError = e.message; _loadingAnnouncements = false; });
@@ -158,7 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
             )),
             SliverToBoxAdapter(child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
-              child: SectionHeader(title: 'Pengumuman', action: 'Lihat Semua', onAction: () {}),
+              child: SectionHeader(
+                title: 'Pengumuman',
+                action: 'Lihat Semua',
+                onAction: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const AnnouncementScreen()));
+                },
+              ),
             )),
             SliverToBoxAdapter(child: _buildAnnouncementsSection()),
             SliverToBoxAdapter(child: Padding(
@@ -226,9 +233,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   IconData _iconForPriority(int p) {
     switch (p) {
-      case 3:  return Icons.warning_amber_rounded;
-      case 2:  return Icons.info_outline_rounded;
-      default: return Icons.campaign_rounded;
+      case 3:  return Icons.warning_rounded; // Penting: aggressive red
+      case 2:  return Icons.campaign_rounded; // Peringatan: yellow speaker
+      case 1:  return Icons.campaign_rounded; // Info: blue speaker
+      default: return Icons.chat_bubble_outline_rounded; // Normal: gray relaxing
     }
   }
 
@@ -244,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: _todaySchedules.take(3).map((s) {
         final now       = DateTime.now();
         final isOngoing = () {
-          final st = s.startTime; final et = s.endTime;
+          final st = s.calculatedStartTime; final et = s.calculatedEndTime;
           if (st == null || et == null) return false;
           final sp = st.split(':'); final ep = et.split(':');
           if (sp.length < 2 || ep.length < 2) return false;

@@ -92,7 +92,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
               slivers: [
                 SliverToBoxAdapter(child: _buildProfileCard()),
                 SliverToBoxAdapter(child: _buildInfoSection()),
-                SliverToBoxAdapter(child: _buildMenuSection()),
                 SliverToBoxAdapter(child: _buildLogoutButton()),
                 const SliverToBoxAdapter(child: SizedBox(height: 24)),
               ],
@@ -229,54 +228,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
     );
   }
 
-  // ── Menu Section ───────────────────────────────────────────────────────────
-  Widget _buildMenuSection() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Pengaturan',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: _textDark),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 12, offset: const Offset(0, 3))],
-            ),
-            child: Column(
-              children: [
-                _MenuTile(
-                  icon: Icons.lock_outline_rounded,
-                  label: 'Ubah Password',
-                  iconColor: _primary,
-                  onTap: () => _showComingSoon('Ubah Password'),
-                ),
-                const _TileDivider(),
-                _MenuTile(
-                  icon: Icons.notifications_outlined,
-                  label: 'Notifikasi',
-                  iconColor: const Color(0xFFF0A500),
-                  onTap: () => _showComingSoon('Notifikasi'),
-                ),
-                const _TileDivider(),
-                _MenuTile(
-                  icon: Icons.help_outline_rounded,
-                  label: 'Bantuan',
-                  iconColor: const Color(0xFF22C55E),
-                  onTap: () => _showComingSoon('Bantuan'),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ── Logout Button ──────────────────────────────────────────────────────────
   Widget _buildLogoutButton() {
     return Padding(
@@ -303,16 +254,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
     );
   }
 
-  void _showComingSoon(String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$feature — segera hadir!'),
-        backgroundColor: _primary,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
-  }
+
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -352,43 +294,6 @@ class _InfoTile extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _MenuTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color iconColor;
-  final VoidCallback onTap;
-
-  const _MenuTile({required this.icon, required this.label, required this.iconColor, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            Container(
-              width: 36, height: 36,
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.10),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: iconColor, size: 18),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1A1A2E))),
-            ),
-            const Icon(Icons.chevron_right_rounded, color: Color(0xFFCCCCCC), size: 20),
-          ],
-        ),
       ),
     );
   }

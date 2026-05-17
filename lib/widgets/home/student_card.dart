@@ -117,7 +117,7 @@ class StudentCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Text(
-                        'SCHOOL CAMPUS',
+                        'SEKOLAH',
                         style: TextStyle(
                           fontSize: 10,
                           color: AppColors.textFaint,

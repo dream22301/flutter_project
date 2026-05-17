@@ -33,10 +33,10 @@ class Announcement {
   /// Maps priority level to a display color (for use in widgets).
   /// 0=normal, 1=info, 2=warning, 3=urgent
   static const Map<int, int> priorityColors = {
-    0: 0xFF4C4DDC, // indigo   — normal
-    1: 0xFF0EA5E9, // sky      — info
-    2: 0xFFF0A500, // amber    — warning
-    3: 0xFFEF4444, // red      — urgent
+    0: 0xFF8A93A6, // gray     — normal
+    1: 0xFF0EA5E9, // blue     — info
+    2: 0xFFF0A500, // yellow   — peringatan
+    3: 0xFFEF4444, // red      — penting
   };
 
   int get color => priorityColors[prioritas] ?? priorityColors[0]!;

@@ -66,7 +66,7 @@ class _BottomBar extends StatelessWidget {
   static const _items = [
     (icon: Icons.home_rounded,           label: 'HOME'),
     (icon: Icons.calendar_month_rounded, label: 'JADWAL'),
-    (icon: Icons.assignment_rounded,     label: 'SOAL'),
+    (icon: Icons.assignment_rounded,     label: 'QUIZ'),
     (icon: Icons.person_rounded,         label: 'PROFIL'),
   ];
 

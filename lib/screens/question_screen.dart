@@ -69,8 +69,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
   Widget build(BuildContext context) {
     return PageLayout(
       header: const AppHeader(
-        icon: Icons.vpn_key_rounded,
-        title: 'Masukkan Kode Soal',
+        icon: Icons.assignment_rounded,
+        title: 'Quiz',
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

@@ -232,9 +232,9 @@ class ApiService {
   }
   /// GET /api/mobile/questions/key/{key_code}
   /// Returns a [QuestionSetDetail] with all nested questions by its key code.
-  static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode) async {
+  static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode, String nis, String password) async {
     final response = await http
-        .get(Uri.parse(ApiConfig.questionByKey(keyCode)), headers: _headers)
+        .get(Uri.parse(ApiConfig.questionByKey(keyCode, nis, password)), headers: _headers)
         .timeout(const Duration(seconds: 15));
 
     final body = jsonDecode(response.body);

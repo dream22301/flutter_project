@@ -1,5 +1,6 @@
 import '../models/question_set.dart';
 import '../services/api_service.dart';
+import 'auth_controller.dart';
 
 /// Fetches question sets from the Laravel API.
 /// Analogous to the web's QuestionController.
@@ -42,7 +43,13 @@ class QuestionController {
   /// GET /api/mobile/questions/key/{key_code}
   /// Finds a question set by its key code.
   static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode) async {
-    final detail = await ApiService.getQuestionSetByKey(keyCode);
+    final student = await AuthController.getSession();
+    final password = await AuthController.getSavedPassword();
+    if (student == null || password == null) {
+      throw const ApiException(message: 'Sesi kedaluwarsa. Silakan login kembali.', statusCode: 401);
+    }
+    
+    final detail = await ApiService.getQuestionSetByKey(keyCode, student.nis, password);
     _detailCache[detail.id] = detail;
     return detail;
   }

@@ -51,7 +51,7 @@ class EntryCard extends StatelessWidget {
           width: 70,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              entry.startDisplay,
+              'Jam Ke',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -60,7 +60,7 @@ class EntryCard extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              entry.endDisplay,
+              '${entry.periodStart} - ${entry.periodEnd}',
               style: TextStyle(
                 fontSize: 12,
                 color: past ? const Color(0xFFCCCCCC) : AppColors.textMuted,

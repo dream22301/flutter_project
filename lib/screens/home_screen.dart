@@ -252,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: _todaySchedules.take(3).map((s) {
         final now       = DateTime.now();
         final isOngoing = () {
-          final st = s.startTime; final et = s.endTime;
+          final st = s.calculatedStartTime; final et = s.calculatedEndTime;
           if (st == null || et == null) return false;
           final sp = st.split(':'); final ep = et.split(':');
           if (sp.length < 2 || ep.length < 2) return false;

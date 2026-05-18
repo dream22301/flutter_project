@@ -250,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }();
         return Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-          child: ScheduleCard(timeStart: s.startDisplay, timeEnd: s.endDisplay, subject: s.subject, detail: s.room, isOngoing: isOngoing),
+          child: ScheduleCard(timeStart: 'Jam Ke', timeEnd: '${s.periodStart} - ${s.periodEnd}', subject: s.subject, detail: s.room, isOngoing: isOngoing),
         );
       }).toList(),
     );

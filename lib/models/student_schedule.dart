@@ -32,7 +32,6 @@ class StudentSchedule {
       subject:     json['subject']     as String? ?? '',
       room:        json['room']        as String? ?? '',
       classMajor:  json['class_major'] as String? ?? '',
-      // Cast safely: DB stores ints, API now returns strings, handle both
       periodStart: (json['period_start'] ?? '').toString(),
       periodEnd:   (json['period_end']   ?? '').toString(),
       startTime:   json['start_time']  as String?,
@@ -41,26 +40,23 @@ class StudentSchedule {
   }
 
 
-    // 1. Ambil jam mulainya (berdasarkan jam pelajaran awal)
   String? get calculatedStartTime {
     final p = int.tryParse(periodStart) ?? 0;
     final time = _getHardcodedTime(p, true);
     return time.isNotEmpty ? time : startTime; 
   }
 
-  // 2. Ambil jam akhirnya (berdasarkan jam pelajaran akhir)
   String? get calculatedEndTime {
     final p = int.tryParse(periodEnd) ?? 0;
     final time = _getHardcodedTime(p, false);
     return time.isNotEmpty ? time : endTime;
   }
 
-  // 3. Gunakan waktu yang sudah dikalkulasi untuk ditampilkan di layar
   String get startDisplay => calculatedStartTime ?? 'Jam ke-$periodStart';
   String get endDisplay   => calculatedEndTime   ?? 'Jam ke-$periodEnd';
 
 
-  /// Canonical Indonesian day order used for sorting.
+  // Canonical Indonesian day order used for sorting.
   static const List<String> dayOrder = [
     'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at",
   ];

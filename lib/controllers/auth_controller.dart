@@ -12,9 +12,6 @@ class AuthController {
 
   // ── Login ─────────────────────────────────────────────────────────────────
 
-  /// Authenticates via the API and persists the session locally.
-  /// Returns the authenticated [Student] on success.
-  /// Throws [ApiException] on failure.
   static Future<Student> login({
     required String nis,
     required String password,
@@ -34,7 +31,6 @@ class AuthController {
     await prefs.setString(_keyPassword,   password);
   }
 
-  /// Returns the persisted [Student] if a session exists, or `null`.
   static Future<Student?> getSession() async {
     final prefs = await SharedPreferences.getInstance();
     final nis = prefs.getString(_keyNis);

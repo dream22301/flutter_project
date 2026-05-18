@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
-/// A red banner used to display API / network error messages.
-/// Used across HomeScreen, JadwalScreen, and QuestionScreen.
 class ErrorBanner extends StatelessWidget {
   final String message;
   const ErrorBanner({super.key, required this.message});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
-/// Header row for the schedule section showing the current date.
 class ScheduleHeader extends StatelessWidget {
   const ScheduleHeader({super.key});
 

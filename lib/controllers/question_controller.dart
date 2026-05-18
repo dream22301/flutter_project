@@ -2,16 +2,12 @@ import '../models/question_set.dart';
 import '../services/api_service.dart';
 import 'auth_controller.dart';
 
-/// Fetches question sets from the Laravel API.
-/// Analogous to the web's QuestionController.
 class QuestionController {
   // ── In-memory cache ────────────────────────────────────────────────────────
   static List<QuestionSet>? _listCache;
   static final Map<int, QuestionSetDetail> _detailCache = {};
 
   /// GET /api/mobile/questions
-  /// Returns all question sets (title, key_code, question count).
-  /// Uses an in-memory cache; pass [forceRefresh] = true to bypass.
   static Future<List<QuestionSet>> getQuestionSets({
     bool forceRefresh = false,
   }) async {
@@ -21,8 +17,6 @@ class QuestionController {
   }
 
   /// GET /api/mobile/questions/{id}
-  /// Returns a [QuestionSetDetail] with all nested questions.
-  /// Uses an in-memory cache per ID; pass [forceRefresh] = true to bypass.
   static Future<QuestionSetDetail> getQuestionSetDetail(
     int id, {
     bool forceRefresh = false,
@@ -41,7 +35,6 @@ class QuestionController {
     _detailCache.clear();
   }
   /// GET /api/mobile/questions/key/{key_code}
-  /// Finds a question set by its key code.
   static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode) async {
     final student = await AuthController.getSession();
     final password = await AuthController.getSavedPassword();
@@ -55,7 +48,6 @@ class QuestionController {
   }
 
   /// POST /api/mobile/questions/{id}/score
-  /// Submits the student's score for the given question set.
   static Future<void> submitScore({
     required int questionSetId,
     required String nis,

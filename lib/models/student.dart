@@ -30,21 +30,15 @@ class Student {
     classMajor: map['class_major'] ?? '',
   );
 
-  /// Converts long class names to short form.
-  /// e.g. "XI Rekayasa Perangkat Lunak"    → "XI RPL"
-  /// e.g. "X Teknik Kimia Industri 2"      → "X TKI 2"
-  /// e.g. "XI Produksi & Siaran Program Televisi 1" → "XI PSPT 1"
   String get shortClassMajor {
-    // Extract grade level (X, XI, XII) at the start
     final gradeMatch = RegExp(r'^(X{1,3}I{0,3})\s+').firstMatch(classMajor);
-    if (gradeMatch == null) return classMajor; // can't parse, return as-is
+    if (gradeMatch == null) return classMajor;
 
-    final grade = gradeMatch.group(1)!;                        // "XI"
-    final rest  = classMajor.substring(gradeMatch.end).trim(); // "Rekayasa Perangkat Lunak"
+    final grade = gradeMatch.group(1)!;                        
+    final rest  = classMajor.substring(gradeMatch.end).trim(); 
 
-    // Check for trailing class number (e.g. "… 1", "… 2")
     final numMatch  = RegExp(r'\s+(\d+)$').firstMatch(rest);
-    final classNum  = numMatch?.group(1);                                  // "1" or null
+    final classNum  = numMatch?.group(1);                                  
     final majorName = numMatch != null ? rest.substring(0, numMatch.start) : rest;
 
     // Map to abbreviation (case-insensitive matching)
@@ -79,7 +73,6 @@ class Student {
     } else if (lc.contains('otomatisasi')) {
       abbr = 'OTKP';
     } else {
-      // Fallback: first letter of each meaningful word
       abbr = majorName.split(RegExp(r'\s+'))
           .where((w) => w.isNotEmpty && !['dan', '&', 'dan', 'dan'].contains(w.toLowerCase()))
           .map((w) => w[0].toUpperCase())

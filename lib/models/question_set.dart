@@ -1,9 +1,8 @@
-/// Mirrors a Laravel QuestionSet with its nested Question list.
 class QuestionSet {
   final int    id;
   final String title;
   final String keyCode;
-  final int?   questionsCount; // only present in index listing
+  final int?   questionsCount;
 
   const QuestionSet({
     required this.id,
@@ -22,7 +21,6 @@ class QuestionSet {
   }
 }
 
-/// A single question inside a QuestionSet.
 class Question {
   final int    id;
   final String questionText;
@@ -30,7 +28,7 @@ class Question {
   final String optionB;
   final String optionC;
   final String optionD;
-  final String correctAnswer; // "A", "B", "C", or "D"
+  final String correctAnswer;
 
   const Question({
     required this.id,
@@ -55,7 +53,6 @@ class Question {
   }
 }
 
-/// A QuestionSet enriched with its full question list (from the detail endpoint).
 class QuestionSetDetail {
   final int            id;
   final String         title;

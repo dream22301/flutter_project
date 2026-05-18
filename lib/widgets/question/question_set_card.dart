@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/question_set.dart';
 
-/// A card representing a single QuestionSet in the QuestionScreen list.
 class QuestionSetCard extends StatelessWidget {
   final QuestionSet questionSet;
   final VoidCallback onTap;

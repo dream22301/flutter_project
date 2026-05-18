@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
-/// Live digital clock card shown at the top of HomeScreen.
 class TimeCard extends StatefulWidget {
   const TimeCard({super.key});
 

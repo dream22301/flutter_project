@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/student_schedule.dart';
 
-/// Detailed schedule card used in the JadwalScreen timeline list.
-/// Visually differs based on whether the class is ongoing, past, or upcoming.
 class EntryCard extends StatelessWidget {
   final StudentSchedule entry;
   final bool ongoing;

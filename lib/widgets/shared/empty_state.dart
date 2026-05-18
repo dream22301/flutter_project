@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
-/// A generic "no data" empty-state widget.
-/// Used across HomeScreen, JadwalScreen, and QuestionScreen.
 class EmptyState extends StatelessWidget {
   final String message;
   const EmptyState({super.key, required this.message});

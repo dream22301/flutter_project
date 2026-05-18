@@ -37,7 +37,6 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
     }).length;
     final score = questions.isEmpty ? 0.0 : (correct / questions.length) * 100;
 
-    // Show a loading indicator while submitting
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -47,8 +46,6 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
     try {
       final student = await AuthController.getSession();
       if (student != null) {
-        // Retrieve the plain text password.
-        // AuthController stores the raw password during login so we can re-use it for API requests.
         final password = await AuthController.getSavedPassword() ?? '';
 
         await QuestionController.submitScore(
@@ -59,12 +56,11 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen> {
         );
       }
     } catch (e) {
-      // Just print error, or handle it
       debugPrint('Failed to submit score: $e');
     }
 
     if (!mounted) return;
-    Navigator.pop(context); // Close loading dialog
+    Navigator.pop(context);
 
     showDialog(
       context: context,

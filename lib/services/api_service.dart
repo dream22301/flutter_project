@@ -7,8 +7,7 @@ import '../models/question_set.dart';
 import '../models/student.dart';
 import '../models/student_schedule.dart';
 
-/// Central HTTP client — all raw API calls live here.
-/// Think of this as the Repository layer (analogous to Laravel Services).
+
 class ApiService {
   ApiService._();
 
@@ -21,7 +20,6 @@ class ApiService {
   // ── Student Login ─────────────────────────────────────────────────────────
 
   /// POST /api/mobile/student/login
-  /// Returns [Student] on success or throws [ApiException].
   static Future<Student> loginStudent({
     required String nis,
     required String password,
@@ -48,8 +46,6 @@ class ApiService {
 
   // ── Student Profile ───────────────────────────────────────────────────────
 
-  /// GET /api/mobile/student/profile?nis=…&password=…
-  /// Returns a fresh [Student] from the server (used to refresh local session).
   static Future<Student> getStudentProfile({
     required String nis,
     required String password,
@@ -76,8 +72,6 @@ class ApiService {
 
   // ── Announcements ─────────────────────────────────────────────────────────
 
-  /// GET /api/mobile/announcements?class_major=…
-  /// Returns a list of [Announcement] filtered by class.
   static Future<List<Announcement>> getAnnouncements(String classMajor) async {
     final uri = Uri.parse(ApiConfig.announcements).replace(
       queryParameters: {'class_major': classMajor},
@@ -100,8 +94,6 @@ class ApiService {
     }
   }
 
-  /// GET /api/mobile/announcements/{id}
-  /// Returns a single [Announcement] or throws [ApiException] on 404.
   static Future<Announcement> getAnnouncementDetail(int id) async {
     final response = await http
         .get(Uri.parse(ApiConfig.announcementDetail(id)), headers: _headers)
@@ -122,11 +114,6 @@ class ApiService {
 
   // ── Student Schedule ──────────────────────────────────────────────────────
 
-  /// GET /api/mobile/student-schedule?nis=…&password=…
-  /// Returns a map with keys: `student` ([Student]) and
-  /// `schedules` (List<[StudentSchedule]>).
-  /// Each schedule now also carries `start_time`/`end_time` (HH:MM) from the
-  /// teacher's schedule cross-reference.
   static Future<Map<String, dynamic>> getStudentSchedule({
     required String nis,
     required String password,
@@ -160,9 +147,6 @@ class ApiService {
 
   // ── Next Subject ──────────────────────────────────────────────────────────
 
-  /// GET /api/mobile/next-subject?nis=…&password=…
-  /// Returns [NextSubject] if there is an upcoming class today, or `null`
-  /// when all classes are done / today is a non-school day.
   static Future<NextSubject?> getNextSubject({
     required String nis,
     required String password,
@@ -191,8 +175,6 @@ class ApiService {
 
   // ── Questions ─────────────────────────────────────────────────────────────
 
-  /// GET /api/mobile/questions
-  /// Returns the list of all [QuestionSet] (without nested questions).
   static Future<List<QuestionSet>> getQuestionSets() async {
     final response = await http
         .get(Uri.parse(ApiConfig.questions), headers: _headers)
@@ -211,8 +193,6 @@ class ApiService {
     }
   }
 
-  /// GET /api/mobile/questions/{id}
-  /// Returns a [QuestionSetDetail] with all nested questions.
   static Future<QuestionSetDetail> getQuestionSetDetail(int id) async {
     final response = await http
         .get(Uri.parse(ApiConfig.questionDetail(id)), headers: _headers)
@@ -230,8 +210,7 @@ class ApiService {
       );
     }
   }
-  /// GET /api/mobile/questions/key/{key_code}
-  /// Returns a [QuestionSetDetail] with all nested questions by its key code.
+
   static Future<QuestionSetDetail> getQuestionSetByKey(String keyCode, String nis, String password) async {
     final response = await http
         .get(Uri.parse(ApiConfig.questionByKey(keyCode, nis, password)), headers: _headers)
@@ -250,8 +229,7 @@ class ApiService {
     }
   }
 
-  /// POST /api/mobile/questions/{id}/score
-  /// Submits the student's score for the given question set.
+
   static Future<void> submitScore({
     required int questionSetId,
     required String nis,

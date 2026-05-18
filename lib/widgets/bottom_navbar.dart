@@ -17,8 +17,6 @@ class BottomNavbar extends StatefulWidget {
 class _BottomNavbarState extends State<BottomNavbar> {
   int _currentIndex = 0;
 
-  /// Add your real screen widgets here once they are built.
-  /// Each item maps 1-to-1 with the nav items below.
   final List<Widget> _pages = const [
     HomeScreen(),
     JadwalScreen(),
@@ -27,7 +25,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   ];
 
   void _onItemTapped(int index) {
-    if (index == _currentIndex) return; // no rebuild if same tab
+    if (index == _currentIndex) return;
     setState(() => _currentIndex = index);
   }
 

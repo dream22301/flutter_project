@@ -2,8 +2,8 @@
 class NextSubject {
   final String subject;
   final String room;
-  final String startTime;  // e.g. "10:00:00"
-  final String endTime;    // e.g. "11:30:00"
+  final String startTime; 
+  final String endTime;    
   final int periodStart;
   final int periodEnd;
 
@@ -27,7 +27,6 @@ class NextSubject {
     );
   }
 
-  /// Returns a display-friendly time string, e.g. "10:00 – 11:30".
   String get timeRange {
     String fmt(String t) => t.length >= 5 ? t.substring(0, 5) : t;
     return '${fmt(startTime)} – ${fmt(endTime)}';

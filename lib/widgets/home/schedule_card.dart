@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
-/// A compact schedule row card shown on the HomeScreen dashboard.
-/// Shows start/end time, subject name, room, and an "Ongoing" badge.
 class ScheduleCard extends StatelessWidget {
   final String timeStart;
   final String timeEnd;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/next_subject.dart';
 
-/// Gradient card showing the next upcoming subject for the student.
 class NextSubjectCard extends StatelessWidget {
   final NextSubject ns;
   const NextSubjectCard({super.key, required this.ns});

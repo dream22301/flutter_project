@@ -1,4 +1,3 @@
-/// Mirrors the Laravel Announcement model fields.
 class Announcement {
   final int id;
   final String title;
@@ -30,13 +29,11 @@ class Announcement {
     );
   }
 
-  /// Maps priority level to a display color (for use in widgets).
-  /// 0=normal, 1=info, 2=warning, 3=urgent
   static const Map<int, int> priorityColors = {
-    0: 0xFF8A93A6, // gray     — normal
-    1: 0xFF0EA5E9, // blue     — info
-    2: 0xFFF0A500, // yellow   — peringatan
-    3: 0xFFEF4444, // red      — penting
+    0: 0xFF8A93A6, // — normal
+    1: 0xFF0EA5E9, // — info
+    2: 0xFFF0A500, // — peringatan
+    3: 0xFFEF4444, // — penting
   };
 
   int get color => priorityColors[prioritas] ?? priorityColors[0]!;

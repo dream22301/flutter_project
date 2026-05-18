@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 
-/// Shared page header — used by ALL screens for visual consistency.
-/// Analogous to a Laravel Blade component (@component('header')).
-///
-/// Set [showBack] = true on detail/nested screens to show a back arrow
-/// instead of the branded icon.
 class AppHeader extends StatelessWidget {
   const AppHeader({
     super.key,
@@ -19,7 +14,7 @@ class AppHeader extends StatelessWidget {
   final IconData  icon;
   final String    title;
   final String?   subtitle;
-  final List<Widget> trailing; // action buttons on the right
+  final List<Widget> trailing;
   final bool      showBack;
 
   @override
@@ -76,7 +71,6 @@ class AppHeader extends StatelessWidget {
             ),
           ),
 
-          // Trailing actions
           ...trailing,
         ],
       ),
@@ -84,7 +78,6 @@ class AppHeader extends StatelessWidget {
   }
 }
 
-/// Small icon-button helper used in [AppHeader.trailing].
 class HeaderAction extends StatelessWidget {
   const HeaderAction({
     super.key,

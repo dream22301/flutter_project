@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/student.dart';
 
-/// Displays the logged-in student's identity card on the HomeScreen.
 class StudentCard extends StatelessWidget {
   final Student? student;
   const StudentCard({super.key, required this.student});

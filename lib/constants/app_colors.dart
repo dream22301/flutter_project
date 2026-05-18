@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Central color palette for EduCanvas.
-/// Import this file instead of repeating Color(...) literals everywhere.
+
 class AppColors {
-  AppColors._(); // prevent instantiation
+  AppColors._();
 
   // ── Brand ──────────────────────────────────────────────────────────────────
   static const Color primary    = Color(0xFF4C4DDC);
-  static const Color primaryAlt = Color(0xFF5B5EE8); // gradient partner
-  static const Color primaryBg  = Color(0xFFF2F3F8); // app background
+  static const Color primaryAlt = Color(0xFF5B5EE8); 
+  static const Color primaryBg  = Color(0xFFF2F3F8); 
 
   // ── Text ───────────────────────────────────────────────────────────────────
   static const Color textDark   = Color(0xFF1A1A2E);
@@ -31,7 +30,7 @@ class AppColors {
   static const Color surfaceAlt = Color(0xFFF8F8F8);
   static const Color border     = Color(0xFFF0F0F0);
   static const Color divider    = Color(0xFFEEEEEE);
-  static const Color cardShadow = Color(0x0A000000); // ~4% black
+  static const Color cardShadow = Color(0x0A000000);
 
   // ── Primary tints ──────────────────────────────────────────────────────────
   static const Color primaryLight    = Color(0xFFEEEEFF);

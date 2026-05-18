@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/question_set.dart';
 
-/// Displays a single question with its four selectable options.
-/// Calls [onAnswerSelected] when the student taps an option.
 class QuestionItem extends StatelessWidget {
   final Question question;
   final int questionNumber;

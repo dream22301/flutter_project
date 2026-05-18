@@ -1,17 +1,13 @@
-/// Mirrors the Laravel StudentSchedule model.
-/// period_start / period_end are period numbers (e.g. "1", "4").
-/// start_time  / end_time   are HH:MM clock times from the teacher's schedule
-/// (null when no teacher schedule is found for that subject).
 class StudentSchedule {
   final int    id;
   final String day;
   final String subject;
   final String room;
   final String classMajor;
-  final String periodStart; // period number as string e.g. "1"
-  final String periodEnd;   // period number as string e.g. "4"
-  final String? startTime;  // HH:MM e.g. "07:00" — from teacher's schedule
-  final String? endTime;    // HH:MM e.g. "09:00" — from teacher's schedule
+  final String periodStart; 
+  final String periodEnd;   
+  final String? startTime;  
+  final String? endTime;    
 
   const StudentSchedule({
     required this.id,
@@ -56,7 +52,6 @@ class StudentSchedule {
   String get endDisplay   => calculatedEndTime   ?? 'Jam ke-$periodEnd';
 
 
-  // Canonical Indonesian day order used for sorting.
   static const List<String> dayOrder = [
     'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at",
   ];
